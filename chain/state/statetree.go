@@ -31,11 +31,12 @@ var log = logging.Logger("statetree")
 
 // StateTree stores actors state by their ID.
 type StateTree struct {
-	root        adt.Map
-	version     types.StateTreeVersion
-	info        cid.Cid
-	Store       cbor.IpldStore
-	lookupIDFun func(address.Address) (address.Address, error)
+	root    adt.Map
+	version types.StateTreeVersion
+	info    cid.Cid
+	Store   cbor.IpldStore
+
+	LookupIDFun func(address.Address) (address.Address, error) // Exported for testing puroses
 
 	snaps *stateSnaps
 }
@@ -230,7 +231,7 @@ func NewStateTree(cst cbor.IpldStore, ver types.StateTreeVersion) (*StateTree, e
 		Store:   cst,
 		snaps:   newStateSnaps(),
 	}
-	s.lookupIDFun = s.lookupIDinternal
+	s.LookupIDFun = s.lookupIDinternal
 	return s, nil
 }
 
@@ -302,7 +303,7 @@ func LoadStateTree(cst cbor.IpldStore, c cid.Cid) (*StateTree, error) {
 		Store:   cst,
 		snaps:   newStateSnaps(),
 	}
-	s.lookupIDFun = s.lookupIDinternal
+	s.LookupIDFun = s.lookupIDinternal
 
 	return s, nil
 }
@@ -349,7 +350,7 @@ func (st *StateTree) LookupID(addr address.Address) (address.Address, error) {
 	if ok {
 		return resa, nil
 	}
-	a, err := st.lookupIDFun(addr)
+	a, err := st.LookupIDFun(addr)
 	if err != nil {
 		return a, err
 	}
