@@ -6,6 +6,15 @@
 
 ## Improvements
 
+### FVM RPC Concurrent Requests
+
+The default maximum FVM concurrency (`LOTUS_FVM_CONCURRENCY`) has increased from 4 to the number of available CPU threads. Furthermore, the FVM now allocates `LOTUS_FVM_CONCURRENCY` OS-level threads with 64MiB stacks (in 1.26, we allocated one thread per CPU core regardless of the value of `LOTUS_FVM_CONCURRENCY`).
+
+Impact:
+
+1. This will increase memory usage for nodes specifying a higher `LOTUS_FVM_CONCURRENCY` than the number of CPU threads they have available.
+2. This will allow such nodes to actually take advantage of this higher concurrency limit where the concurrency was previously capped at the number of available CPU threads.
+
 # v1.26.0 / 2024-03-21
 
 This is the stable release for the upcoming MANDATORY Filecoin network upgrade v22, codenamed Dragon 🐉, at `epoch 3817920 - 2024-04-11 - 14:00:00Z`
