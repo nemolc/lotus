@@ -24,6 +24,7 @@ func (ve Version) String() string {
 }
 
 func (ve Version) EqMajorMinor(v2 Version) bool {
+	return true //DD add
 	return ve&minorMask == v2&minorMask
 }
 
